@@ -28,7 +28,7 @@ app.post('/api/chat', async (req, res) => {
                     "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: "nvidia/nemotron-3.5-super-v1:free",
+                    model: "nvidia/nemotron-3.5-lightning:free",
                     messages: messages,
                     temperature: 0.7,
                     max_tokens: 1000,
@@ -77,11 +77,11 @@ app.post('/api/chat', async (req, res) => {
                     continue;
                 }
 
-                if (trimmedLine.startsWith("data: ")) {
+                if (!trimmedLine.startsWith("data:")) {
                     continue;
                 }
 
-                const data = trimmedLine.slice(5).trim();
+                const data = trimmedLine.replace("data:", "").trim();
 
                 if (data === "[DONE]") {
                     continue;
@@ -92,7 +92,7 @@ app.post('/api/chat', async (req, res) => {
                     const json = JSON.parse(data);
 
                     const content = 
-                    json.choices[0]?.delta?.content;
+                    json.choices?.[0]?.delta?.content;
 
                     if (content) {
                         res.write(`data: ${JSON.stringify(content)}\n\n`);
@@ -117,8 +117,8 @@ app.post('/api/chat', async (req, res) => {
             res.status(500).json({ error: "Terjadi kesalahan pada server" });
         } else {
             res.write(
-                'data: ${JSON.stringify({ error: "Terjadi kesalahan pada server" })}\n\n'
-            );
+            `data: ${JSON.stringify("Terjadi kesalahan pada server")}\n\n`
+        );
 
             res.end();
         }

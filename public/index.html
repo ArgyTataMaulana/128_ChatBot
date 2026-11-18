@@ -1,145 +1,87 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova AI - Your AI Assistant</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nemotron AI - Mobile Chatbot</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-top">
-            <div class="brand">
-                <div class="brand-icon">✦</div>
-                <span>nova<span class="brand-light">.ai</span></span>
-            </div>
-            <button class="icon-btn close-sidebar" onclick="toggleSidebar()">✕</button>
-        </div>
-
-        <button class="new-chat" onclick="newChat()">
-            <span>＋</span> New Chat
-        </button>
-
-        <div class="history-title">RECENT CHATS</div>
-
-        <div class="history-list" id="historyList">
-            <div class="history-item active">
-                <span>◈</span>
-                <span>New conversation</span>
-            </div>
-        </div>
-
-        <div class="sidebar-bottom">
-            <div class="profile">
-                <div class="avatar user-avatar">A</div>
-                <div class="profile-info">
-                    <strong>My Account</strong>
-                    <small>Free Plan</small>
+    <main class="mobile-container">
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="bot-profile">
+                <div class="bot-avatar">
+                    <span>AI</span>
                 </div>
-                <span class="profile-menu">•••</span>
-            </div>
-        </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="main">
-
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="icon-btn menu-btn" onclick="toggleSidebar()">☰</button>
-                <span class="model-name">Nova AI <span class="model-badge">FREE</span></span>
+                <div class="bot-details">
+                    <h1 class="bot-name">Nemotron AI</h1>
+                    <div class="bot-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Online</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="topbar-right">
-                <span class="status-dot"></span>
-                <span class="online-text">AI Online</span>
-            </div>
+            <button id="resetBtn" class="reset-btn" type="button" title="Reset Percakapan">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                </svg>
+                <span>Reset</span>
+            </button>
         </header>
 
-        <!-- CHAT AREA -->
+        <!-- Chat Area -->
         <section class="chat-area" id="chatArea">
-
-            <div class="welcome" id="welcome">
-                <div class="welcome-icon">
-                    <span>✦</span>
+            <div class="messages-list" id="messagesList">
+                <!-- Welcome Message -->
+                <div class="message-row bot-row">
+                    <div class="bubble bot-bubble">
+                        <p>Halo! Saya <strong>Nemotron AI</strong>. Ada yang bisa saya bantu hari ini?</p>
+                    </div>
                 </div>
 
-                <div class="welcome-label">YOUR AI ASSISTANT</div>
-
-                <h1>What can I help<br>you <span>with today?</span></h1>
-
-                <p>Ask anything. Explore ideas, learn something new,<br>
-                or get help with your daily tasks.</p>
-
-                <div class="suggestions">
-                    <button onclick="sendSuggestion('Jelaskan apa itu JavaScript untuk pemula')">
-                        <span>⌘</span>
-                        <div>
-                            <strong>Learn something</strong>
-                            <small>Explain complex topics simply</small>
-                        </div>
+                <!-- Suggestion Chips -->
+                <div class="suggestions-container" id="suggestionsContainer">
+                    <button class="chip" onclick="sendSuggestion('Jelaskan apa itu Web Services secara singkat')">
+                        🌐 Apa itu Web Services?
                     </button>
-
-                    <button onclick="sendSuggestion('Buatkan ide project aplikasi web yang menarik')">
-                        <span>✧</span>
-                        <div>
-                            <strong>Generate ideas</strong>
-                            <small>Explore creative possibilities</small>
-                        </div>
+                    <button class="chip" onclick="sendSuggestion('Buatkan ide project web sederhana untuk pemula')">
+                        💡 Ide Project Web
                     </button>
-
-                    <button onclick="sendSuggestion('Bantu saya membuat kode HTML CSS sederhana')">
-                        <span>⌨</span>
-                        <div>
-                            <strong>Write some code</strong>
-                            <small>Build something amazing</small>
-                        </div>
-                    </button>
-
-                    <button onclick="sendSuggestion('Berikan tips belajar yang efektif dan tidak mudah lupa')">
-                        <span>◉</span>
-                        <div>
-                            <strong>Improve yourself</strong>
-                            <small>Discover better ways to learn</small>
-                        </div>
+                    <button class="chip" onclick="sendSuggestion('Tuliskan contoh kode fetch API di JavaScript')">
+                        💻 Contoh Fetch API JS
                     </button>
                 </div>
             </div>
-
-            <div class="messages" id="messages"></div>
-
         </section>
 
-        <!-- INPUT AREA -->
-        <footer class="input-section">
-            <div class="input-wrapper">
-                <textarea
-                    id="userInput"
-                    placeholder="Message Nova AI..."
-                    rows="1"
-                    onkeydown="handleKeyDown(event)"
-                ></textarea>
-
-                <div class="input-bottom">
-                    <span class="input-hint">✦ AI can make mistakes. Check important information.</span>
-
-                    <button id="sendBtn" class="send-btn" onclick="sendMessage()">
-                        ↑
-                    </button>
+        <!-- Input Area -->
+        <footer class="chat-input-container">
+            <form class="input-form" id="chatForm" onsubmit="event.preventDefault(); sendMessage();">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        rows="1" 
+                        placeholder="Ketik pesan..." 
+                        autocomplete="off"
+                        required></textarea>
                 </div>
-            </div>
+                <button type="submit" id="sendBtn" class="send-btn" aria-label="Kirim Pesan">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </form>
         </footer>
-
     </main>
-</div>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
