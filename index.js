@@ -44,4 +44,9 @@ app.post('/api/chat', async (req, res) => {
             return res.status(response.status).json({ error: errorData });
         }
 
+        // headers for streaming response
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+
         
