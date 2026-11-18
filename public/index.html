@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova AI - Your AI Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <div class="brand">
+                <div class="brand-icon">✦</div>
+                <span>nova<span class="brand-light">.ai</span></span>
+            </div>
+            <button class="icon-btn close-sidebar" onclick="toggleSidebar()">✕</button>
+        </div>
+
+        <button class="new-chat" onclick="newChat()">
+            <span>＋</span> New Chat
+        </button>
+
+        <div class="history-title">RECENT CHATS</div>
+
+        <div class="history-list" id="historyList">
+            <div class="history-item active">
+                <span>◈</span>
+                <span>New conversation</span>
+            </div>
+        </div>
+
+        <div class="sidebar-bottom">
+            <div class="profile">
+                <div class="avatar user-avatar">A</div>
+                <div class="profile-info">
+                    <strong>My Account</strong>
+                    <small>Free Plan</small>
+                </div>
+                <span class="profile-menu">•••</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="icon-btn menu-btn" onclick="toggleSidebar()">☰</button>
+                <span class="model-name">Nova AI <span class="model-badge">FREE</span></span>
+            </div>
+
+            <div class="topbar-right">
+                <span class="status-dot"></span>
+                <span class="online-text">AI Online</span>
+            </div>
+        </header>
+
+        <!-- CHAT AREA -->
+        <section class="chat-area" id="chatArea">
+
+            <div class="welcome" id="welcome">
+                <div class="welcome-icon">
+                    <span>✦</span>
+                </div>
+
+                <div class="welcome-label">YOUR AI ASSISTANT</div>
+
+                <h1>What can I help<br>you <span>with today?</span></h1>
+
+                <p>Ask anything. Explore ideas, learn something new,<br>
+                or get help with your daily tasks.</p>
+
+                <div class="suggestions">
+                    <button onclick="sendSuggestion('Jelaskan apa itu JavaScript untuk pemula')">
+                        <span>⌘</span>
+                        <div>
+                            <strong>Learn something</strong>
+                            <small>Explain complex topics simply</small>
+                        </div>
+                    </button>
+
+                    <button onclick="sendSuggestion('Buatkan ide project aplikasi web yang menarik')">
+                        <span>✧</span>
+                        <div>
+                            <strong>Generate ideas</strong>
+                            <small>Explore creative possibilities</small>
+                        </div>
+                    </button>
+
+                    <button onclick="sendSuggestion('Bantu saya membuat kode HTML CSS sederhana')">
+                        <span>⌨</span>
+                        <div>
+                            <strong>Write some code</strong>
+                            <small>Build something amazing</small>
+                        </div>
+                    </button>
+
+                    <button onclick="sendSuggestion('Berikan tips belajar yang efektif dan tidak mudah lupa')">
+                        <span>◉</span>
+                        <div>
+                            <strong>Improve yourself</strong>
+                            <small>Discover better ways to learn</small>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="messages" id="messages"></div>
+
+        </section>
+
+        <!-- INPUT AREA -->
+        <footer class="input-section">
+            <div class="input-wrapper">
+                <textarea
+                    id="userInput"
+                    placeholder="Message Nova AI..."
+                    rows="1"
+                    onkeydown="handleKeyDown(event)"
+                ></textarea>
+
+                <div class="input-bottom">
+                    <span class="input-hint">✦ AI can make mistakes. Check important information.</span>
+
+                    <button id="sendBtn" class="send-btn" onclick="sendMessage()">
+                        ↑
+                    </button>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
