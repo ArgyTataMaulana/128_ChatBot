@@ -1,6 +1,8 @@
 // State Management
 let chatHistory = [];
 let isGenerating = false;
+let recognition = null;
+let isListening = false;
 
 // DOM Elements
 const messagesList = document.getElementById('messagesList');
@@ -8,12 +10,14 @@ const chatArea = document.getElementById('chatArea');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
 const resetBtn = document.getElementById('resetBtn');
+const micBtn = document.getElementById('micBtn');
 
 // Check if running on file:// protocol
 window.addEventListener('DOMContentLoaded', () => {
     if (window.location.protocol === 'file:') {
         appendMessage('bot', '⚠️ <strong>Peringatan:</strong> Halaman ini dibuka langsung lewat file (<code>file://</code>). Fitur chat tidak akan berjalan jika tidak melalui server.<br><br>👉 Silakan jalankan <code>node index.js</code> di terminal, lalu buka <strong><a href="http://localhost:3000" target="_blank">http://localhost:3000</a></strong> di browser kamu.');
     }
+    setupSpeechRecognition();
 });
 
 // Auto resize textarea
@@ -30,9 +34,92 @@ messageInput.addEventListener('keydown', function (e) {
     }
 });
 
+// ----------------------------------------------------
+// Microphone / Speech-to-Text (Web Speech API)
+// ----------------------------------------------------
+function setupSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        micBtn.style.opacity = '0.4';
+        micBtn.title = 'Browser tidak mendukung Speech Recognition (Gunakan Chrome/Edge)';
+        micBtn.addEventListener('click', () => {
+            alert('Browser kamu tidak mendukung Speech Recognition. Silakan gunakan Google Chrome atau Microsoft Edge.');
+        });
+        return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = 'id-ID'; // Bahasa Indonesia
+    recognition.continuous = false;
+    recognition.interimResults = true;
+
+    recognition.onstart = () => {
+        isListening = true;
+        micBtn.classList.add('listening');
+        micBtn.title = 'Sedang mendengarkan... Klik untuk berhenti';
+        messageInput.placeholder = 'Mendengarkan suara kamu...';
+    };
+
+    recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = 0; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+        }
+        messageInput.value = transcript;
+        messageInput.style.height = 'auto';
+        messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
+    };
+
+    recognition.onerror = (event) => {
+        console.warn('Speech recognition error:', event.error);
+        stopListening();
+        if (event.error === 'not-allowed') {
+            alert('Izin mikrofon ditolak. Silakan izinkan akses mikrofon di browser.');
+        }
+    };
+
+    recognition.onend = () => {
+        stopListening();
+    };
+
+    micBtn.addEventListener('click', toggleListening);
+}
+
+function toggleListening() {
+    if (isGenerating) return;
+    if (!recognition) return;
+
+    if (isListening) {
+        recognition.stop();
+        stopListening();
+    } else {
+        try {
+            recognition.start();
+        } catch (err) {
+            console.error('Gagal memulai mic:', err);
+        }
+    }
+}
+
+function stopListening() {
+    isListening = false;
+    micBtn.classList.remove('listening');
+    micBtn.title = 'Bicara dengan Mikrofon';
+    messageInput.placeholder = 'Ketik pesan atau gunakan mic...';
+}
+
+// ----------------------------------------------------
+// Chat & Messaging Functions
+// ----------------------------------------------------
+
 // Reset conversation
 resetBtn.addEventListener('click', function () {
     if (isGenerating) return;
+    if (isListening) {
+        recognition.stop();
+        stopListening();
+    }
     
     chatHistory = [];
     messagesList.innerHTML = `
@@ -144,6 +231,12 @@ function removeTypingIndicator() {
 
 // Send Message handler
 async function sendMessage() {
+    // If mic was listening, stop it
+    if (isListening && recognition) {
+        recognition.stop();
+        stopListening();
+    }
+
     const userText = messageInput.value.trim();
     if (!userText || isGenerating) return;
 

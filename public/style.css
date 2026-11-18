@@ -10,6 +10,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-light: #eff6ff;
+    --danger: #ef4444;
     --bg-page: #0f172a;
     --bg-chat: #f8fafc;
     --bg-card: #ffffff;
@@ -292,11 +293,11 @@ body {
 .input-form {
     display: flex;
     align-items: flex-end;
-    gap: 10px;
+    gap: 8px;
     background-color: #f1f5f9;
     border: 1.5px solid transparent;
     border-radius: 24px;
-    padding: 6px 8px 6px 16px;
+    padding: 6px 8px 6px 14px;
     transition: all 0.2s ease;
 }
 
@@ -323,7 +324,7 @@ textarea#messageInput {
     font-size: 14px;
     color: var(--text-primary);
     line-height: 1.4;
-    padding: 6px 0;
+    padding: 7px 0;
     box-sizing: border-box;
 }
 
@@ -331,20 +332,62 @@ textarea#messageInput::placeholder {
     color: #94a3b8;
 }
 
-/* Send Button */
-.send-btn {
+/* Action Buttons (Mic & Send) */
+.action-btn {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background-color: var(--primary);
     border: none;
-    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
     transition: all 0.2s ease;
+}
+
+/* Mic Button */
+.mic-btn {
+    background-color: transparent;
+    color: #64748b;
+}
+
+.mic-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.mic-btn:hover {
+    color: var(--primary);
+    background-color: rgba(37, 99, 235, 0.08);
+}
+
+/* Mic Listening Animation */
+.mic-btn.listening {
+    background-color: #fee2e2;
+    color: var(--danger);
+    animation: pulseMic 1.2s infinite;
+}
+
+@keyframes pulseMic {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+        transform: scale(1.08);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+        transform: scale(1);
+    }
+}
+
+/* Send Button */
+.send-btn {
+    background-color: var(--primary);
+    color: #ffffff;
 }
 
 .send-btn svg {
